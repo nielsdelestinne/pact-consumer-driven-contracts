@@ -56,5 +56,183 @@ So, we have:
     - [Versioning in the Pact Broker](https://docs.pact.io/getting_started/versioning_in_the_pact_broker)
     - [Pacticipant Version Numbers](https://docs.pact.io/pact_broker/pacticipant_version_numbers)
 
+## Scenarios
+
+### Provider breaks verified contract
+
+Given:
+
+| Consumer      | Consumer Version | Provider       | Provider Version  | Pact Verified |
+| ------------- | -------------    | -------------  | -------------     | ------------- |
+| UserConsumer  | 1.0              | UserProvider   | 1.0-SNAPSHOT      | VALID         | 
+
+When we change the `UserCreated` code in the `pact-provider` & thus break the contract 
+& do not give the provider a new application version & run `mvn clean install` 
+from the root. Then:
+
+| Consumer      | Consumer Version | Provider       | Provider Version  | Pact Verified |
+| ------------- | -------------    | -------------  | -------------     | ------------- |
+| UserConsumer  | 1.0              | UserProvider   | 1.0-SNAPSHOT      | INVALID       |
+
+Also, the build will fail (provider test fails!)
+
+### Provider fixes broken contract
+
+Given:
+
+| Consumer      | Consumer Version | Provider       | Provider Version  | Pact Verified |
+| ------------- | -------------    | -------------  | -------------     | ------------- |
+| UserConsumer  | 1.0              | UserProvider   | 1.0-SNAPSHOT      | INVALID       |
+
+When we change the `UserCreated` code in the `pact-provider` & thus again fix the contract 
+& do not give the provider a new application version & run `mvn clean install` 
+from the root. Then:
+
+| Consumer      | Consumer Version | Provider       | Provider Version  | Pact Verified |
+| ------------- | -------------    | -------------  | -------------     | ------------- |
+| UserConsumer  | 1.0              | UserProvider   | 1.0-SNAPSHOT      | VALID         |
+
+### Provider makes non-breaking change
+
+Due to the change in the code, the provider correctly receives 
+a new version (e.g. commit sha). Given:
 
 
+| Consumer      | Consumer Version | Provider       | Provider Version  | Pact Verified |
+| ------------- | -------------    | -------------  | -------------     | ------------- |
+| UserConsumer  | 1.0              | UserProvider   | 1.0-SNAPSHOT      | VALID         | 
+
+When we update the version (`provider-application-version`) & run `mvn clean install` from the root. Then: 
+
+| Consumer      | Consumer Version | Provider       | Provider Version  | Pact Verified |
+| ------------- | -------------    | -------------  | -------------     | ------------- |
+| UserConsumer  | 1.0              | UserProvider   | 1.1-SNAPSHOT      | VALID         | 
+| UserConsumer  | 1.0              | UserProvider   | 1.0-SNAPSHOT      | VALID         | 
+
+### Provider breaks verified contract
+
+Due to the change in the code, the provider correctly receives 
+a new version (e.g.: commit sha). Given:
+
+| Consumer      | Consumer Version | Provider       | Provider Version  | Pact Verified |
+| ------------- | -------------    | -------------  | -------------     | ------------- |
+| UserConsumer  | 1.0              | UserProvider   | 1.1-SNAPSHOT      | VALID         | 
+| UserConsumer  | 1.0              | UserProvider   | 1.0-SNAPSHOT      | VALID         | 
+
+When we change the `UserCreated` code in the `pact-provider` & thus break the contract 
+& update the version (`provider-application-version`) & run `mvn clean install` 
+from the root. Then: 
+
+| Consumer      | Consumer Version | Provider       | Provider Version  | Pact Verified |
+| ------------- | -------------    | -------------  | -------------     | ------------- |
+| UserConsumer  | 1.0              | UserProvider   | 1.2-SNAPSHOT      | INVALID       | 
+| UserConsumer  | 1.0              | UserProvider   | 1.1-SNAPSHOT      | VALID         | 
+| UserConsumer  | 1.0              | UserProvider   | 1.0-SNAPSHOT      | VALID         | 
+
+Also, the build will fail (provider test fails!)
+
+### Provider fixes broken contract (new release) 
+
+Due to the change in the code, the provider receives a new version (e.g.: commit sha). 
+However, the code of 1.2-SNAPSHOT was broken. The contract could also have been fixed by 
+using this same version for the provider. Given:
+
+| Consumer      | Consumer Version | Provider       | Provider Version  | Pact Verified |
+| ------------- | -------------    | -------------  | -------------     | ------------- |
+| UserConsumer  | 1.0              | UserProvider   | 1.2-SNAPSHOT      | INVALID       | 
+| UserConsumer  | 1.0              | UserProvider   | 1.1-SNAPSHOT      | VALID         | 
+| UserConsumer  | 1.0              | UserProvider   | 1.0-SNAPSHOT      | VALID         | 
+
+When we change the `UserCreated` code in the `pact-provider` & thus fix the contract 
+& update the version (`provider-application-version`) & run `mvn clean install` 
+from the root. Then: 
+
+| Consumer      | Consumer Version | Provider       | Provider Version  | Pact Verified |
+| ------------- | -------------    | -------------  | -------------     | ------------- |
+| UserConsumer  | 1.0              | UserProvider   | 1.3-SNAPSHOT      | VALID         | 
+| UserConsumer  | 1.0              | UserProvider   | 1.2-SNAPSHOT      | INVALID       | 
+| UserConsumer  | 1.0              | UserProvider   | 1.1-SNAPSHOT      | VALID         | 
+| UserConsumer  | 1.0              | UserProvider   | 1.0-SNAPSHOT      | VALID         | 
+
+### Consumer changes contract
+
+Given:
+
+| Consumer      | Consumer Version | Provider       | Provider Version  | Pact Verified |
+| ------------- | -------------    | -------------  | -------------     | ------------- |
+| UserConsumer  | 1.0              | UserProvider   | 1.3-SNAPSHOT      | VALID         | 
+| UserConsumer  | 1.0              | UserProvider   | 1.2-SNAPSHOT      | INVALID       | 
+| UserConsumer  | 1.0              | UserProvider   | 1.1-SNAPSHOT      | VALID         | 
+| UserConsumer  | 1.0              | UserProvider   | 1.0-SNAPSHOT      | VALID         | 
+
+When we change the contract in the `pact-consumer` & run `mvn clean install` from within `pact-consumer`
+& publish the contract (`mvn pact:publish`). We did not update the consumer version! 
+Thus, we will have a new contract, but for the same consumer version... Then:
+
+| Consumer      | Consumer Version | Provider       | Provider Version  | Pact Verified |
+| ------------- | -------------    | -------------  | -------------     | ------------- |
+| UserConsumer  | 1.0              | UserProvider   |                   |               | 
+
+and after running the provider test & publishing the results:
+
+| Consumer      | Consumer Version | Provider       | Provider Version  | Pact Verified |
+| ------------- | -------------    | -------------  | -------------     | ------------- |
+| UserConsumer  | 1.0              | UserProvider   | 1.3-SNAPSHOT      | INVALID       |
+
+### And it keeps going...
+
+| Consumer      | Consumer Version | Provider       | Provider Version  | Pact Verified |
+| ------------- | -------------    | -------------  | -------------     | ------------- |
+| UserConsumer  | 1.0              | UserProvider   | 1.3-SNAPSHOT      | INVALID       |
+
+When the provider fixes the contract & receives a new version. Then:
+
+| Consumer      | Consumer Version | Provider       | Provider Version  | Pact Verified |
+| ------------- | -------------    | -------------  | -------------     | ------------- |
+| UserConsumer  | 1.0              | UserProvider   | 1.4-SNAPSHOT      | VALID         |
+| UserConsumer  | 1.0              | UserProvider   | 1.3-SNAPSHOT      | INVALID       |
+
+When the consumer changes the contract & receives a new version
+
+| Consumer      | Consumer Version | Provider       | Provider Version  | Pact Verified |
+| ------------- | -------------    | -------------  | -------------     | ------------- |
+| UserConsumer  | 1.1              | UserProvider   |                   |               |  
+| UserConsumer  | 1.0              | UserProvider   | 1.4-SNAPSHOT      | VALID         |
+| UserConsumer  | 1.0              | UserProvider   | 1.3-SNAPSHOT      | INVALID       |
+
+When the provider runs its tests & publishes the results
+
+| Consumer      | Consumer Version | Provider       | Provider Version  | Pact Verified |
+| ------------- | -------------    | -------------  | -------------     | ------------- |
+| UserConsumer  | 1.1              | UserProvider   | 1.4-SNAPSHOT      | INVALID       |  
+| UserConsumer  | 1.0              | UserProvider   | 1.4-SNAPSHOT      | VALID         |
+| UserConsumer  | 1.0              | UserProvider   | 1.3-SNAPSHOT      | INVALID       |
+
+When the consumer changes the contract again & receives a new version (& the provider already verified the contract)
+
+| Consumer      | Consumer Version | Provider       | Provider Version  | Pact Verified |
+| ------------- | -------------    | -------------  | -------------     | ------------- |
+| UserConsumer  | 1.2              | UserProvider   | 1.4-SNAPSHOT      | INVALID       |  
+| UserConsumer  | 1.1              | UserProvider   | 1.4-SNAPSHOT      | INVALID       |  
+| UserConsumer  | 1.0              | UserProvider   | 1.4-SNAPSHOT      | VALID         |
+| UserConsumer  | 1.0              | UserProvider   | 1.3-SNAPSHOT      | INVALID       |
+
+When the provider fixes the contract & receives a new version & runs the test & publishes the report
+
+| Consumer      | Consumer Version | Provider       | Provider Version  | Pact Verified |
+| ------------- | -------------    | -------------  | -------------     | ------------- |
+| UserConsumer  | 1.2              | UserProvider   | 1.5-SNAPSHOT      | VALID         |  
+| UserConsumer  | 1.2              | UserProvider   | 1.4-SNAPSHOT      | INVALID       |  
+| UserConsumer  | 1.1              | UserProvider   | 1.4-SNAPSHOT      | INVALID       |  
+| UserConsumer  | 1.0              | UserProvider   | 1.4-SNAPSHOT      | VALID         |
+| UserConsumer  | 1.0              | UserProvider   | 1.3-SNAPSHOT      | INVALID       |
+
+When the provider hotfixes the contract in 1.4-SNAPSHOT & runs the test & publishes the report
+
+| Consumer      | Consumer Version | Provider       | Provider Version  | Pact Verified |
+| ------------- | -------------    | -------------  | -------------     | ------------- |
+| UserConsumer  | 1.2              | UserProvider   | 1.4-SNAPSHOT      | VALID         |  
+| UserConsumer  | 1.2              | UserProvider   | 1.5-SNAPSHOT      | VALID         |  
+| UserConsumer  | 1.1              | UserProvider   | 1.4-SNAPSHOT      | INVALID       |  
+| UserConsumer  | 1.0              | UserProvider   | 1.4-SNAPSHOT      | VALID         |
+| UserConsumer  | 1.0              | UserProvider   | 1.3-SNAPSHOT      | INVALID       |
