@@ -2,7 +2,7 @@ package be.niedel.pact.consumer.domain;
 
 import java.util.UUID;
 
-public class UserCreated implements DomainEvent {
+public class UserCreated implements IntegrationEvent {
 
     private UUID id;
     private String nickname;

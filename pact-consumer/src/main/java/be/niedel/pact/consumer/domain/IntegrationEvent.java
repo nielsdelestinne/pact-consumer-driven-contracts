@@ -1,5 +1,5 @@
 package be.niedel.pact.consumer.domain;
 
-public interface DomainEvent {
+public interface IntegrationEvent {
 
 }
