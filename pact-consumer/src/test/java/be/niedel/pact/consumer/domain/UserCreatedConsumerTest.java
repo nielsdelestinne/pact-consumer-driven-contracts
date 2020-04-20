@@ -28,8 +28,8 @@ class UserCreatedConsumerTest {
         body.stringValue("id", ID);
         body.stringValue("nickname", NICKNAME);
 
-        return builder.given("USER_CREATED_EVENT")
-                .expectsToReceive("a user created event")
+        return builder.given("SomeProviderState...")
+                .expectsToReceive("USER_CREATED_EVENT")
                 .withContent(body)
                 .toPact();
     }
