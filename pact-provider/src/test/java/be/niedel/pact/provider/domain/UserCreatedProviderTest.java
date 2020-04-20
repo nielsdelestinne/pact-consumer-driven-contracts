@@ -1,4 +1,4 @@
-package be.niedel.pact.consumer.projection;
+package be.niedel.pact.provider.domain;
 
 import au.com.dius.pact.provider.PactVerifyProvider;
 import au.com.dius.pact.provider.junit.Provider;

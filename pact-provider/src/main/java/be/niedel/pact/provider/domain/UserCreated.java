@@ -1,4 +1,4 @@
-package be.niedel.pact.consumer.projection;
+package be.niedel.pact.provider.domain;
 
 import java.util.UUID;
 

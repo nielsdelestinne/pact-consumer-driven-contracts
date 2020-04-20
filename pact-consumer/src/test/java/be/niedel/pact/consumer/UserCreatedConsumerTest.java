@@ -1,4 +1,4 @@
-package be.niedel.pact.consumer.domain;
+package be.niedel.pact.consumer;
 
 import au.com.dius.pact.consumer.MessagePactBuilder;
 import au.com.dius.pact.consumer.dsl.PactDslJsonBody;
