@@ -5,7 +5,11 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'cd pact-consumer'
-                maven('clean install -DskipTests')
+                maven {
+                    goals('clean')
+                    goals('install')
+                    properties(skipTests: true)
+                }
             }
         }
         stage('Test') {
