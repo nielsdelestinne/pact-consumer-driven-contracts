@@ -25,11 +25,11 @@ pipeline {
         stage('Publish Pact') {
             steps {
                 withMaven(maven: 'mvn') {
-                    echo "Commit SHA: ${env.GIT_COMMIT}"
-                    echo "Commit Branch: ${env.GIT_BRANCH}"
+                    def releaseVersion = "${sh(returnStdout: true, script: "git rev-list HEAD --count").trim()}"
+                    def consumerVersion = "${releaseVersion}-${env.GIT_COMMIT.substring(0, 7)}"
                     sh """
                         cd pact-consumer
-                        mvn pact:publish -Dconsumer-application.version=${env.GIT_COMMIT} -Dpact.tag=${env.GIT_BRANCH}
+                        mvn pact:publish -Dconsumer-application.version=${consumerVersion} -Dpact.tag=${env.GIT_BRANCH}
                     """
                 }
             }
