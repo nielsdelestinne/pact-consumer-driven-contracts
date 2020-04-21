@@ -14,6 +14,7 @@
     <properties>
         <consumer-application.version>${project.version}</consumer-application.version>
         <pact.tag>master</pact.tag>
+        <pact-broker.url>http://localhost:9292</pact-broker.url>
     </properties>
 
     <dependencies>
@@ -45,7 +46,7 @@
                 <groupId>au.com.dius</groupId>
                 <artifactId>pact-jvm-provider-maven</artifactId>
                 <configuration>
-                    <pactBrokerUrl>http://localhost:9292</pactBrokerUrl>
+                    <pactBrokerUrl>${pact-broker.url}</pactBrokerUrl>
                     <trimSnapshot>true</trimSnapshot>
                     <projectVersion>${consumer-application.version}</projectVersion>
                     <tags>
