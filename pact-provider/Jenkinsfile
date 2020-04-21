@@ -20,7 +20,7 @@ pipeline {
             steps {
                 withMaven(maven: 'mvn') {
                     dir('pact-provider') {
-                        sh "mvn test -Dpact.provider.version=${PROVIDER_VERSION} -Dpactbroker.host=broker_app -Dpactbroker.port=9292 -Dpactbroker.tags=origin/master"
+                        sh "mvn test -Dpact.provider.version=${PROVIDER_VERSION} -Dpactbroker.host=broker_app -Dpactbroker.port=9292 -Dpactbroker.tags=origin/feature/LMAC-001_name"
                     }
                 }
             }
