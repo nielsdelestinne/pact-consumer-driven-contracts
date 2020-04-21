@@ -1,20 +1,28 @@
 pipeline {
     agent any
 
+    environment {
+        RELEASE_VERSION = "${sh(returnStdout: true, script: "git rev-list HEAD --count").trim()}"
+        PROVIDER_VERSION = "${RELEASE_VERSION}-${env.GIT_COMMIT.substring(0, 7)}"
+    }
+
     stages {
-        stage('Build Pact Provider') {
+        stage('Build') {
             steps {
-                echo 'Building..'
+                withMaven(maven: 'mvn') {
+                    dir('pact-provider') {
+                        sh 'mvn clean install -DskipTests'
+                    }
+                }
             }
         }
-        stage('Test') {
+        stage('Test & Provider Test Publish Verification Report') {
             steps {
-                echo 'Testing..'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                echo 'Deploying....'
+                withMaven(maven: 'mvn') {
+                    dir('pact-provider') {
+                        sh "mvn test -Dpact.provider.version=${PROVIDER_VERSION} -Dpactbroker.host=broker_app -Dpactbroker.port=9292"
+                    }
+                }
             }
         }
     }
