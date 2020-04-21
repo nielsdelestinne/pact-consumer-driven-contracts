@@ -4,19 +4,22 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-
-                withMaven(maven: 'mvn'){
+                withMaven(maven: 'mvn') {
                     sh '''
                         cd pact-consumer
                         mvn clean install -DskipTests
                     '''
                 }
-
             }
         }
         stage('Test') {
             steps {
-                echo 'Testing..'
+                withMaven(maven: 'mvn') {
+                    sh '''
+                        cd pact-consumer
+                        mvn test
+                    '''
+                }
             }
         }
     }
