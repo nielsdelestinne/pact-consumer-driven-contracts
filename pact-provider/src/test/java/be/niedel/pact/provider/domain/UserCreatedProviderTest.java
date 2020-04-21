@@ -1,6 +1,7 @@
 package be.niedel.pact.provider.domain;
 
 import au.com.dius.pact.provider.PactVerifyProvider;
+import au.com.dius.pact.provider.junit.IgnoreNoPactsToVerify;
 import au.com.dius.pact.provider.junit.Provider;
 import au.com.dius.pact.provider.junit.State;
 import au.com.dius.pact.provider.junit.VerificationReports;
@@ -17,11 +18,12 @@ import org.slf4j.LoggerFactory;
 @Provider("UserProvider")
 @PactBroker
 @VerificationReports(value = {"json"})
+@IgnoreNoPactsToVerify
 public class UserCreatedProviderTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserCreatedProviderTest.class);
     private static final String ID = "4de42227-d5a3-4a22-993f-dec0cfdaffed";
-    protected static final String NICKNAME = "jimmy_drop_beans";
+    protected static final String NICKNAME = "jimmy_drop_tables";
 
     @BeforeEach
     void before(PactVerificationContext context) {
