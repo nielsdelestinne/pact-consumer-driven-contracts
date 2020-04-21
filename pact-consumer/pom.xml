@@ -13,7 +13,7 @@
 
     <properties>
         <consumer-application.version>${project.version}</consumer-application.version>
-        <pact.tag>master</pact.tag>
+        <pact.tag>origin/master</pact.tag>
         <pact-broker.url>http://localhost:9292</pact-broker.url>
     </properties>
 
