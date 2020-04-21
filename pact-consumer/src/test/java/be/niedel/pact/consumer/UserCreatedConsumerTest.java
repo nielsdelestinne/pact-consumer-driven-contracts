@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserCreatedConsumerTest {
 
     private static final String ID = "4de42227-d5a3-4a22-993f-dec0cfdaffed";
-    protected static final String NICKNAME = "jimmy_drop_beans";
+    protected static final String NICKNAME = "jimmy_drop_tables";
 
     @Pact(provider="UserProvider", consumer="UserConsumer")
     MessagePact createUserEvent(MessagePactBuilder builder) {
