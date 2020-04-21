@@ -13,6 +13,7 @@
 
     <properties>
         <consumer-application.version>${project.version}</consumer-application.version>
+        <pact.tag>master</pact.tag>
     </properties>
 
     <dependencies>
@@ -47,6 +48,9 @@
                     <pactBrokerUrl>http://localhost:9292</pactBrokerUrl>
                     <trimSnapshot>true</trimSnapshot>
                     <projectVersion>${consumer-application.version}</projectVersion>
+                    <tags>
+                        <tag>${pact.tag}</tag>
+                    </tags>
                 </configuration>
             </plugin>
             <plugin>
