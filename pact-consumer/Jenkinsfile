@@ -25,9 +25,10 @@ pipeline {
         stage('Publish Pact') {
             steps {
                 withMaven(maven: 'mvn') {
+                    echo "${env.GIT_COMMIT}"
                     sh '''
                         cd pact-consumer
-                        echo "${env.GIT_COMMIT}"
+
                         echo "${env.GIT_BRANCH}"
                         mvn pact:publish -Dconsumer-application.version=${env.GIT_COMMIT} -Dpact.tag=${env.GIT_BRANCH}
                     '''
