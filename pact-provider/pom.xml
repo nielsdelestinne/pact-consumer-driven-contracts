@@ -46,6 +46,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <systemPropertyVariables>
+                        <pactbroker.host>localhost</pactbroker.host>
+                        <pactbroker.port>9292</pactbroker.port>
                         <pact.provider.version>${provider-application.version}</pact.provider.version>
                         <pact.verifier.publishResults>true</pact.verifier.publishResults>
                     </systemPropertyVariables>

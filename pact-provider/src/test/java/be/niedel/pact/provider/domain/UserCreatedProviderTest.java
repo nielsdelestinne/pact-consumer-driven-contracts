@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Provider("UserProvider")
-@PactBroker(host = "localhost", port = "9292")
+@PactBroker
 @VerificationReports(value = {"json"})
 public class UserCreatedProviderTest {
 
