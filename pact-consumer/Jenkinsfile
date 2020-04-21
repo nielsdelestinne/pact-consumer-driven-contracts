@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    environment {
+        RELEASE_VERSION = "${sh(returnStdout: true, script: "git rev-list HEAD --count").trim()}"
+        CONSUMER_VERSION = "${releaseVersion}-${env.GIT_COMMIT.substring(0, 7)}"
+    }
+
     stages {
         stage('Build') {
             steps {
@@ -24,14 +29,10 @@ pipeline {
         }
         stage('Publish Pact') {
             steps {
-                script {
-                    def releaseVersion = "${sh(returnStdout: true, script: "git rev-list HEAD --count").trim()}"
-                    def consumerVersion = "${releaseVersion}-${env.GIT_COMMIT.substring(0, 7)}"
-                }
                 withMaven(maven: 'mvn') {
                     sh """
                         cd pact-consumer
-                        mvn pact:publish -Dpact-broker.url=http://broker_app:9292 -Dconsumer-application.version=${consumerVersion} -Dpact.tag=${env.GIT_BRANCH}
+                        mvn pact:publish -Dpact-broker.url=http://broker_app:9292 -Dconsumer-application.version=${CONSUMER_VERSION} -Dpact.tag=${env.GIT_BRANCH}
                     """
                 }
             }
