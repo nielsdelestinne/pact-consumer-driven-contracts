@@ -27,8 +27,8 @@ pipeline {
                 withMaven(maven: 'mvn') {
                     sh '''
                         cd pact-consumer
-                        echo ${env.GIT_COMMIT}
-                        echo ${env.GIT_BRANCH}
+                        echo "${env.GIT_COMMIT}"
+                        echo "${env.GIT_BRANCH}"
                         mvn pact:publish -Dconsumer-application.version=${env.GIT_COMMIT} -Dpact.tag=${env.GIT_BRANCH}
                     '''
                 }
