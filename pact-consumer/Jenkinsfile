@@ -27,10 +27,10 @@ pipeline {
                 withMaven(maven: 'mvn') {
                     echo "Commit SHA: ${env.GIT_COMMIT}"
                     echo "Commit Branch: ${env.GIT_BRANCH}"
-                    sh ''"
+                    sh """
                         cd pact-consumer
                         mvn pact:publish -Dconsumer-application.version=${env.GIT_COMMIT} -Dpact.tag=${env.GIT_BRANCH}
-                    "''
+                    """
                 }
             }
         }
