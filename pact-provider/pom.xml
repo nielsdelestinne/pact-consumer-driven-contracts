@@ -48,6 +48,7 @@
                     <systemPropertyVariables>
                         <pactbroker.host>localhost</pactbroker.host>
                         <pactbroker.port>9292</pactbroker.port>
+                        <pactbroker.tags>origin/master</pactbroker.tags>
                         <pact.provider.version>${provider-application.version}</pact.provider.version>
                         <pact.verifier.publishResults>true</pact.verifier.publishResults>
                     </systemPropertyVariables>
