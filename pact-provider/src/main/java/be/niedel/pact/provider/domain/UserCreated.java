@@ -24,7 +24,7 @@ public class UserCreated implements DomainEvent {
     }
 
     public String toJson() {
-        return "{\"nickyname\": \"" + nickname + "\",\"id\": \"" + id + "\"}";
+        return "{\"nickNameForUser\": \"" + nickname + "\",\"id\": \"" + id + "\"}";
     }
 
 }
