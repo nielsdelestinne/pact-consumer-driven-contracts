@@ -19,9 +19,9 @@ import org.slf4j.LoggerFactory;
 @PactBroker
 @VerificationReports(value = {"json"})
 @IgnoreNoPactsToVerify
-public class UserCreatedProviderTest {
+public class UserProviderForUserConsumerTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserCreatedProviderTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserProviderForUserConsumerTest.class);
     private static final String ID = "4de42227-d5a3-4a22-993f-dec0cfdaffed";
     protected static final String NICKNAME = "jimmy_drop_tables";
 
@@ -44,6 +44,11 @@ public class UserCreatedProviderTest {
     @PactVerifyProvider("USER_CREATED_EVENT")
     public String verifyUserCreatedEvent() {
         return new UserCreated(ID, NICKNAME).toJson();
+    }
+
+    @PactVerifyProvider("USER_UPDATED_EVENT")
+    public String verifyUserUpdatedEvent() {
+        return new UserUpdated(ID, NICKNAME).toJson();
     }
 
 }
