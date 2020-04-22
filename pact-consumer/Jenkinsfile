@@ -2,8 +2,7 @@ pipeline {
     agent any
 
     environment {
-        RELEASE_VERSION = "${sh(returnStdout: true, script: "git rev-list HEAD --count").trim()}"
-        CONSUMER_VERSION = "${RELEASE_VERSION}-${env.GIT_COMMIT.substring(0, 7)}"
+        CONSUMER_VERSION = "${RELEASE_VERSION}-${env.GIT_BRANCH}"
     }
 
     stages {
