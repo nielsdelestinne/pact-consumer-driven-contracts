@@ -26,7 +26,7 @@ class UserCreatedConsumerTest {
     MessagePact createUserEvent(MessagePactBuilder builder) {
         PactDslJsonBody body = new PactDslJsonBody();
         body.stringValue("id", ID);
-        body.stringValue("name", NICKNAME);
+        body.stringValue("nickyname", NICKNAME);
 
         return builder.given("SomeProviderState...")
                 .expectsToReceive("USER_CREATED_EVENT")
@@ -39,7 +39,7 @@ class UserCreatedConsumerTest {
     void test(List<Message> messages) {
         final String userEventAsJson = new String(messages.get(0).contentsAsBytes());
         assertThat(userEventAsJson).contains("\"id\":\"" + ID + "\"");
-        assertThat(userEventAsJson).contains("\"name\":\"" + NICKNAME + "\"");
+        assertThat(userEventAsJson).contains("\"nickyname\":\"" + NICKNAME + "\"");
     }
 
 
