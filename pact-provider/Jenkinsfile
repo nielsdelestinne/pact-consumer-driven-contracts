@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         RELEASE_VERSION = "${sh(returnStdout: true, script: "git rev-list HEAD --count").trim()}"
-        TAG_NAME = env.GIT_BRANCH.replaceAll("origin/feature/", "").replaceAll("origin/", "")
+        TAG_NAME = env.GIT_BRANCH.replaceAll(/^.*\/((LMAC-.*|master)$)/, '$1')
         PROVIDER_VERSION = "${RELEASE_VERSION}-${TAG_NAME}"
     }
 
