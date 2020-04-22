@@ -4,6 +4,8 @@ pipeline {
     environment {
         RELEASE_VERSION = "${sh(returnStdout: true, script: "git rev-list HEAD --count").trim()}"
         CONSUMER_VERSION = "${RELEASE_VERSION}-${env.GIT_BRANCH}"
+        TAG_NAME = env.GIT_BRANCH.replaceAll("origin/feature/", "")
+        TAG_NAME = TAG_NAME.replaceAll("origin/", "")
     }
 
     stages {
@@ -29,7 +31,7 @@ pipeline {
             steps {
                 withMaven(maven: 'mvn') {
                     dir('pact-consumer') {
-                        sh "mvn pact:publish -Dpact-broker.url=http://broker_app:9292 -Dconsumer-application.version=${CONSUMER_VERSION} -Dpact.tag=${env.GIT_BRANCH}"
+                        sh "mvn pact:publish -Dpact-broker.url=http://broker_app:9292 -Dconsumer-application.version=${CONSUMER_VERSION} -Dpact.tag=${TAG_NAME}"
                     }
                 }
             }
