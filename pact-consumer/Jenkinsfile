@@ -45,7 +45,7 @@ pipeline {
             steps {
                 withMaven(maven: 'mvn') {
                     dir('pact-consumer') {
-                        sh "mvn pact:can-i-deploy -Dpact-broker.url=http://broker_app:9292 -Dpacticipant='UserConsumer' -DpacticipantVersion=${CONSUMER_VERSION} -DtoTag=master"
+                        sh "mvn pact:can-i-deploy -Dpact-broker.url=http://broker_app:9292 -Dpacticipant='UserConsumer'"
                     }
                 }
             }
