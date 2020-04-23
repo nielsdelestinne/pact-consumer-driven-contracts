@@ -69,5 +69,5 @@ def getPactTag() {
 }
 
 def isValidPactTag() {
-    return !PACT_TAG_NAME.equals(getInvalidPactTagSuffix())
+    return !getPactTag().equals(getInvalidPactTagSuffix())
 }
