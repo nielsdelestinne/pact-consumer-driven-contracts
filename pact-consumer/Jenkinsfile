@@ -5,7 +5,7 @@ pipeline {
         RELEASE_VERSION = "${sh(returnStdout: true, script: "git rev-list HEAD --count").trim()}"
         PACT_TAG_NAME = getPactTag()
         BRANCH_WITHOUT_PACT_TAG = env.GIT_BRANCH.replaceAll(/^.*\/((LMAC-.*|master)$)/, '$1').replaceAll(PACT_TAG_NAME, '')
-        CONSUMER_VERSION = "${RELEASE_VERSION}-${GIT_BRANCH_WITHOUT_PACT_TAG}"
+        CONSUMER_VERSION = "${RELEASE_VERSION}-${BRANCH_WITHOUT_PACT_TAG}"
     }
 
     stages {
