@@ -38,7 +38,7 @@ def getInvalidPactTagSuffix() {
 }
 
 def getPactTagIfValid(defaultTag) {
-    if(isValidPactTag) {
+    if(isValidPactTag()) {
         return getPactTag()
     }
     return defaultTag
