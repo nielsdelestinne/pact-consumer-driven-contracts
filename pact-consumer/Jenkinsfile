@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         RELEASE_VERSION = "${sh(returnStdout: true, script: "git rev-list HEAD --count").trim()}"
-        TAG_NAME = env.GIT_BRANCH.replaceAll(/^.*\/((LMAC-.*|master)$)/, '$1')
+        PACT_TAG_NAME = getPactTag()
         CONSUMER_VERSION = "${RELEASE_VERSION}-${TAG_NAME}"
     }
 
@@ -28,9 +28,15 @@ pipeline {
         }
         stage('Publish Pact') {
             steps {
-                withMaven(maven: 'mvn') {
-                    dir('pact-consumer') {
-                        sh "mvn pact:publish -Dpact-broker.url=http://broker_app:9292 -Dconsumer-application.version=${CONSUMER_VERSION} -Dpact.tag=${TAG_NAME}"
+                script {
+                    if(isValidPactTag()) {
+                        withMaven(maven: 'mvn') {
+                            dir('pact-consumer') {
+                                sh "mvn pact:publish -Dpact-broker.url=http://broker_app:9292 -Dconsumer-application.version=${CONSUMER_VERSION} -Dpact.tag=${TAG_NAME}"
+                            }
+                        }
+                    } else {
+                        echo "BRANCH DID NOT CONTAIN THE 'PACT_TAG_' SUFFIX. THUS, NO CONTRACT PUBLISHED."
                     }
                 }
             }
@@ -46,4 +52,18 @@ pipeline {
         }
 
     }
+}
+
+def pactTagSuffix = 'PACT_TAG_'
+def invalidPactTagSuffix = 'INVALID'
+
+def getPactTag() {
+    if(env.GIT_BRANCH.contains(pactTagSuffix) {
+        return env.GIT_BRANCH.replaceAll(/^.*\/(pactTagSuffix$)/, "${pactTagSuffix}$1")
+    }
+    return invalidPactTagSuffix
+}
+
+def isValidPactTag() {
+    return !PACT_TAG_NAME.equals(invalidPactTagSuffix)
 }
