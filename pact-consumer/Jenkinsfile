@@ -54,16 +54,20 @@ pipeline {
     }
 }
 
-pactTagSuffix = 'PACT_TAG_'
-invalidPactTagSuffix = 'INVALID'
+def getPactTagSuffix() {
+    return 'PACT_TAG_'
+}
+def getInvalidPactTagSuffix() {
+    return 'INVALID'
+}
 
 def getPactTag() {
-    if(env.GIT_BRANCH.contains(pactTagSuffix)) {
-        return env.GIT_BRANCH.replaceAll(/^.*(${pactTagSuffix}.*$)/, '$1')
+    if(env.GIT_BRANCH.contains(getPactTagSuffix()) {
+        return env.GIT_BRANCH.replaceAll(/^.*(${getPactTagSuffix()}.*$)/, '$1')
     }
-    return invalidPactTagSuffix
+    return getInvalidPactTagSuffix()
 }
 
 def isValidPactTag() {
-    return !PACT_TAG_NAME.equals(invalidPactTagSuffix)
+    return !PACT_TAG_NAME.equals(getInvalidPactTagSuffix())
 }
