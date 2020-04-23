@@ -59,7 +59,7 @@ def invalidPactTagSuffix = 'INVALID'
 
 def getPactTag() {
     if(env.GIT_BRANCH.contains(pactTagSuffix) {
-        return env.GIT_BRANCH.replaceAll(/^.*\/(pactTagSuffix$)/, "${pactTagSuffix}$1")
+        return env.GIT_BRANCH.replaceAll('/^.*\/(' + pactTagSuffix + '$)/', pactTagSuffix + '$1')
     }
     return invalidPactTagSuffix
 }
